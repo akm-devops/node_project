@@ -9,7 +9,7 @@ on:
     inputs:
       arc_name:
         description: 'Target ARC name used for `runs-on` in job'
-        default: ubuntu-latest
+        default: runner-scale-set-docker-dind
 
 env:
   KANIKO_CACHE_ARGS: "--cache=true --cache-copy-layers=true --cache-ttl=24h"
@@ -37,9 +37,8 @@ jobs:
           pwd
           ls -a
           
-          /kaniko/executor --dockerfile="./app/Dockerfile" \
+          /kaniko/executor --dockerfile="./Dockerfile" \
             --context="${{ github.repositoryUrl }}#${{ github.ref }}#${{ github.sha }}"  \
-            --dockerfile=workspace/Dockerfile
             --no-push \
             ${{ env.KANIKO_CACHE_ARGS }} \
             --push-retry 5 
