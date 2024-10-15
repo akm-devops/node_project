@@ -12,7 +12,7 @@ on:
         default: runner-scale-set-kubernetes
 
 env:
-  KANIKO_CACHE_ARGS: "--cache=true --cache-copy-layers=true --cache-ttl=24h"
+  KANIKO_CACHE_ARGS: "--cache --cache-copy-layers --cache-ttl=24h"
 
 jobs:
 
