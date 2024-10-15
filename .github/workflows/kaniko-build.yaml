@@ -9,7 +9,7 @@ on:
     inputs:
       arc_name:
         description: 'Target ARC name used for `runs-on` in job'
-        default: runner-scale-set-docker-dind
+        default: runner-scale-set-kubernetes
 
 env:
   KANIKO_CACHE_ARGS: "--cache=true --cache-copy-layers=true --cache-ttl=24h"
