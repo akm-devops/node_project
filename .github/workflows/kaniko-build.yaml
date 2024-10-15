@@ -39,7 +39,7 @@ jobs:
           
           /kaniko/executor --dockerfile="./app/Dockerfile" \
             --context="${{ github.repositoryUrl }}#${{ github.ref }}#${{ github.sha }}"  \
-            --dockerfile=workspace/node_project/Dockerfile
+            --dockerfile=workspace/Dockerfile
             --no-push \
             ${{ env.KANIKO_CACHE_ARGS }} \
             --push-retry 5 
