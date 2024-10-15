@@ -34,6 +34,7 @@ jobs:
 
           /kaniko/executor --dockerfile="./app/Dockerfile" \
             --context="${{ github.repositoryUrl }}#${{ github.ref }}#${{ github.sha }}"  \
+            --dockerfile=workspace/node_project/Dockerfile
             --destination=ashwinkmgowda/nodejs-image-demo:$(date +%Y%m%d%H%M%S) \
             ${{ env.KANIKO_CACHE_ARGS }} \
             --push-retry 5 
