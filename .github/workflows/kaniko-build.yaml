@@ -27,11 +27,16 @@ jobs:
     steps:
       - name: Build and Push Image to Dockerhub with kaniko
         run: |
+          pwd
+          la -a
           cat <<EOF > /kaniko/.docker/config.json
           { "auths": { "https://index.docker.io/v1/": { "auth": "${{ secrets.DOCKERHUB_AUTH }}" } } }
           # { "credHelpers": { "${{ env.ACR_URL }}": "acr-env" } }
           EOF
 
+          pwd
+          ls -a
+          
           /kaniko/executor --dockerfile="./app/Dockerfile" \
             --context="${{ github.repositoryUrl }}#${{ github.ref }}#${{ github.sha }}"  \
             --dockerfile=workspace/node_project/Dockerfile
