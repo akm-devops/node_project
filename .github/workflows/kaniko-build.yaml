@@ -40,11 +40,11 @@ jobs:
           
           /kaniko/executor --dockerfile="./Dockerfile" \
             --context="${{ github.repositoryUrl }}#${{ github.ref }}#${{ github.sha }}"  \
-            --no-push \
+            --destination=ashwinkmgowda/nodejs-image-demo:$(date +%Y%m%d%H%M%S)\
             --push-retry 5
             
             # ${{ env.KANIKO_CACHE_ARGS }} \
-            # --destination=ashwinkmgowda/nodejs-image-demo:$(date +%Y%m%d%H%M%S)
+
             
           # /kaniko/executor --dockerfile="./app/Dockerfile" \
           #   --context="${{ github.repositoryUrl }}#${{ github.ref }}#${{ github.sha }}"  \
