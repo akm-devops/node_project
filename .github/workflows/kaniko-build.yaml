@@ -11,8 +11,8 @@ on:
         description: 'Target ARC name used for `runs-on` in job'
         default: runner-scale-set-kubernetes
 
-env:
-  KANIKO_CACHE_ARGS: "--cache --cache-copy-layers --cache-ttl=24h"
+# env:
+#   KANIKO_CACHE_ARGS: "--cache --cache-copy-layers --cache-ttl=24h"
 
 jobs:
 
@@ -40,9 +40,9 @@ jobs:
           /kaniko/executor --dockerfile="./Dockerfile" \
             --context="${{ github.repositoryUrl }}#${{ github.ref }}#${{ github.sha }}"  \
             --no-push \
-            ${{ env.KANIKO_CACHE_ARGS }} \
-            --push-retry 5 
-
+            --push-retry 5
+            
+            # ${{ env.KANIKO_CACHE_ARGS }} \
             # --destination=ashwinkmgowda/nodejs-image-demo:$(date +%Y%m%d%H%M%S)
             
           # /kaniko/executor --dockerfile="./app/Dockerfile" \
