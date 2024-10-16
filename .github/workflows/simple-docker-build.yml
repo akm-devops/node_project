@@ -17,12 +17,12 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Log in to Docker Hub
       env:
         DOCKERHUB_AUTH: ${{ secrets.DOCKERHUB_AUTH }}
-      run: echo "${{ secrets.DOCKERHUB_AUTH }}" | docker login --username <your-username> --password-stdin
+      run: echo "${{ secrets.DOCKERHUB_AUTH }}" | docker login --username ashwinkmgowda --password-stdin
 
     - name: Build Docker image
       run: docker build . -t ashwinkmgowda/nodejs_image_demo:${{ github.run_number }}
