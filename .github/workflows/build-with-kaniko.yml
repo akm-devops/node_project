@@ -33,5 +33,5 @@ jobs:
           
           /kaniko/executor --dockerfile="./Dockerfile" \
             --context="${{ github.repositoryUrl }}#${{ github.ref }}#${{ github.sha }}"  \
-            --destination=ashwinkmgowda/nodejs-image-demo:${{ GITHUB_RUN_NUMBER }}\
+            --destination=ashwinkmgowda/nodejs-image-demo:${{ github.run_id }}\
             --push-retry 5
