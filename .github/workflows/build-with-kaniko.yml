@@ -16,7 +16,7 @@ on:
 
 jobs:
 
-  build-to-acr:
+  build-to-dockerhub:
     runs-on:
       - ${{ inputs.arc_name }}
     container:
@@ -27,17 +27,13 @@ jobs:
     steps:
       - name: Build and Push Image to Dockerhub with kaniko
         run: |
-          pwd
-          ls -a
           cat <<EOF > /kaniko/.docker/config.json
-          { "auths": { "https://index.docker.io/v1/": { "auth": "YXNod2lua21nb3dkYTpkY2tyX3BhdF9GR25ZYmFBVzR2bHR0VGg0X2U3Y1NZUUFxREU=" } } }
+          { "auths": { "https://index.docker.io/v1/": { "auth": "${{ secrets.DOCKERHUB_AUTH }}" } } }
           EOF
-
+          # { "auths": { "https://index.docker.io/v1/": { "auth": "YXNod2lua21nb3dkYTpkY2tyX3BhdF9GR25ZYmFBVzR2bHR0VGg0X2U3Y1NZUUFxREU=" } } }
           # { "auths": { "https://index.docker.io/v1/": { "auth": "${{ secrets.DOCKERHUB_AUTH }}" } } }
           
-          pwd
-          ls -a
-          
+
           /kaniko/executor --dockerfile="./Dockerfile" \
             --context="${{ github.repositoryUrl }}#${{ github.ref }}#${{ github.sha }}"  \
             --destination=ashwinkmgowda/nodejs-image-demo:$(date +%Y%m%d%H%M%S)\
