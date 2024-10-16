@@ -30,28 +30,8 @@ jobs:
           cat <<EOF > /kaniko/.docker/config.json
           { "auths": { "https://index.docker.io/v1/": { "auth": "${{ secrets.DOCKERHUB_AUTH }}" } } }
           EOF
-          # { "auths": { "https://index.docker.io/v1/": { "auth": "YXNod2lua21nb3dkYTpkY2tyX3BhdF9GR25ZYmFBVzR2bHR0VGg0X2U3Y1NZUUFxREU=" } } }
-          # { "auths": { "https://index.docker.io/v1/": { "auth": "${{ secrets.DOCKERHUB_AUTH }}" } } }
           
-
           /kaniko/executor --dockerfile="./Dockerfile" \
             --context="${{ github.repositoryUrl }}#${{ github.ref }}#${{ github.sha }}"  \
-            --destination=ashwinkmgowda/nodejs-image-demo:$(date +%Y%m%d%H%M%S)\
+            --destination=ashwinkmgowda/nodejs-image-demo:${{ GITHUB_RUN_NUMBER }}\
             --push-retry 5
-            
-            # ${{ env.KANIKO_CACHE_ARGS }} \
-
-            
-          # /kaniko/executor --dockerfile="./app/Dockerfile" \
-          #   --context="${{ github.repositoryUrl }}#${{ github.ref }}#${{ github.sha }}"  \
-          #   --destination="$ACR_URL/$NAMESPACE/nginx:$(echo ${GITHUB_SHA} | head  -c 7)" \
-          #   ${{ env.KANIKO_CACHE_ARGS }} \
-          #   --push-retry 5 
-        # env:  # authenticate to ACR via Azure Service Principal
-        #   AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-        #   AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-        #   AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-        #   GIT_USERNAME: ${{ github.actor }}
-        #   GIT_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-        #   ACR_URL: "myacr.azurecr.io"
-        #   NAMESPACE: "frontend-apps"
