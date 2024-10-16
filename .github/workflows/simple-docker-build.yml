@@ -1,0 +1,22 @@
+name: Build and Push Docker Image
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Log in to Docker Hub
+      env:
+        DOCKERHUB_AUTH: ${{ secrets.DOCKERHUB_AUTH }}
+      run: echo "${{ secrets.DOCKERHUB_AUTH }}" | docker login --username <your-username> --password-stdin
+
+    - name: Build Docker image
+      run: docker build . -t ashwinkmgowda/nodejs_image_demo:${{ github.run_number }}
+
+    - name: Push Docker image to Docker Hub
+      run: docker push ashwinkmgowda/nodejs_image_demo:${{ github.run_number }}
