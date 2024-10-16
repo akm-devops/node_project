@@ -1,9 +1,6 @@
 name: Build and Push Docker Image
 
 on:
-  # push:
-  #   branches:
-  #     - main
   workflow_dispatch:
     inputs:
       arc_name:
@@ -12,8 +9,7 @@ on:
 
 jobs:
   build:
-    runs-on:
-      - ${{ inputs.arc_name }}
+    runs-on: ${{ inputs.arc_name }}
 
     steps:
     - name: Checkout repository
@@ -21,8 +17,9 @@ jobs:
 
     - name: Log in to Docker Hub
       env:
-        DOCKERHUB_AUTH: ${{ secrets.DOCKERHUB_AUTH }}
-      run: echo "${{ secrets.DOCKERHUB_AUTH }}" | docker login --username ashwinkmgowda --password-stdin
+        DOCKERHUB_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKERHUB_TOKEN: ${{ secrets.DOCKER_PASSWORD }}
+      run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login --username "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
 
     - name: Build Docker image
       run: docker build . -t ashwinkmgowda/nodejs_image_demo:${{ github.run_number }}
