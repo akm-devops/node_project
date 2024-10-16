@@ -20,7 +20,7 @@ jobs:
     runs-on:
       - ${{ inputs.arc_name }}
     container:
-      image: gcr.io/kaniko-project/executor:v1.23.0-debug # the kaniko image
+      image: gcr.io/kaniko-project/executor:debug # the kaniko image
     permissions:
       contents: read # read the repository
 
