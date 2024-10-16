@@ -1,10 +1,19 @@
 name: Build and Push Docker Image
 
-on: push
+on:
+  # push:
+  #   branches:
+  #     - main
+  workflow_dispatch:
+    inputs:
+      arc_name:
+        description: 'Target ARC name used for `runs-on` in job'
+        default: ubuntu-latest
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on:
+      - ${{ inputs.arc_name }}
 
     steps:
     - name: Checkout repository
