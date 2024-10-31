@@ -1,0 +1,28 @@
+name: Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      arc_name:
+        description: 'Target ARC name used for `runs-on` in job'
+        default: runner-scale-set-kubernetes
+
+jobs:
+  build:
+    name: Build and analyze
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - uses: sonarsource/sonarqube-scan-action@v3
+        env:
+          SONAR_TOKEN: sqa_abc24482cc98a380354552c102e6b58e4c4d35d6 # ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: http://sonarqube.192.168.71.240.sslip.io # ${{ secrets.SONAR_HOST_URL }}
+      # If you wish to fail your job when the Quality Gate is red, uncomment the
+      # following lines. This would typically be used to fail a deployment.
+      # - uses: sonarsource/sonarqube-quality-gate-action@master
+      #   timeout-minutes: 5
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
