@@ -10,7 +10,7 @@ on:
 jobs:
   build:
     name: Build and analyze
-    runs-on: ${{ inputs.arc-name }}
+    runs-on: ${{ inputs.arc_name }}
     steps:
       - uses: actions/checkout@v4
         with:
