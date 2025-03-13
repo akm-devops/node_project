@@ -28,7 +28,7 @@ jobs:
       - name: Build and Push Image to Dockerhub with kaniko
         run: |
           cat <<EOF > /kaniko/.docker/config.json
-          { "auths": { "https://index.docker.io/v1/": { "auth": "YXNod2lua21nb3dkYTpkY2tyX3BhdF9hWTZWRzFIcEhXd3N3cTNtaGloUGluaEk4OHMK" } } }
+          { "auths": { "https://index.docker.io/v1/": { "auth": "${{ secrets.DOCKERHUB_AUTH }}" } } }
           EOF
           
           /kaniko/executor --dockerfile="./Dockerfile" \
