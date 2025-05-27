@@ -1,18 +1,13 @@
-
 replicaCount: 5
-
 image:
-  repository: argoproj/rollouts-demo
+  name: ashwinkmgowda/nodejs-image-demo
   pullPolicy: IfNotPresent
-  tag: "blue"
-
-
+  tag: "63"
 # Chose only one type
 rolloutStrategy:
   blueGreen:
     autoPromotionEnabled: true
     autoPromotionSeconds: 15
-
   # canary:
   #   steps:
   #   - setWeight: 20
