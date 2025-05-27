@@ -2,9 +2,9 @@
 replicaCount: 5
 
 image:
-  repository: argoproj/rollouts-demo
+  repository: ashwinkmgowda/nodejs-image-demo
   pullPolicy: IfNotPresent
-  tag: "blue"
+  tag: "58"
 
 
 # Chose only one type
