@@ -1,19 +1,55 @@
 # build-with-kaniko.yml
 
 name: Build with kaniko
+# on:
+#   # push:
+#   #   branches:
+#   #     - main
+
+#   pull_request:
+#     types:
+#       - closed
+#   workflow_dispatch:
+#     inputs:
+#       arc_name:
+#         description: 'Target ARC name used for `runs-on` in job'
+#         default: runner-scale-set-kubernetes
+
+
 on:
-  # push:
-  #   branches:
-  #     - main
+  # schedule:
+  #   - cron: '50 6 * * *'  # Runs at 12:00 AM UTC every day (7 PM EST the previous day)
+  #   # - cron: '0 0 * * 1-5'  # Runs Mon–Fri at 12:00 AM UTC (7 PM EST the previous day)
+  # workflow_run:
+  #   workflows: ["Cypress Tests Workflow Run"]
+  #   types:
+  #     - completed
+
+  workflow_dispatch:
+    inputs:
+      # test_env:
+      #   description: 'Choose the Config file'
+      #   required: true
+      #   default: 'feature'
+      #   type: choice
+      #   options:
+      #     - feature
+      #     - development
+      #     - default/staging
+
+      runner:
+        description: 'Choose the Runner'
+        required: true
+        default: 'ubuntu-latest'
+        type: choice
+        options:
+          - runner-scale-set-kubernetes
+          - runner-scale-set-dind
+          - ubuntu-latest
 
   pull_request:
     types:
       - closed
-  workflow_dispatch:
-    inputs:
-      arc_name:
-        description: 'Target ARC name used for `runs-on` in job'
-        default: runner-scale-set-kubernetes
 
 # env:
 #   KANIKO_CACHE_ARGS: "--cache --cache-copy-layers --cache-ttl=24h"
@@ -21,8 +57,11 @@ on:
 jobs:
   build-to-dockerhub:
     if: github.event.pull_request.merged == true
-    runs-on:
-      - ${{ inputs.arc_name }}
+    # runs-on:
+    #   - ${{ inputs.arc_name }}
+
+    runs-on: ${{ github.event_name == 'workflow_dispatch' && inputs.runner || (github.event.pull_request.merged == true && 'ubuntu-latest' ) }}
+
     container:
       image: gcr.io/kaniko-project/executor:v1.23.2-debug # the kaniko image
     permissions:
