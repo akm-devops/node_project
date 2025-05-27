@@ -5,6 +5,10 @@ on:
   # push:
   #   branches:
   #     - main
+
+  pull_request:
+    types:
+      - closed
   workflow_dispatch:
     inputs:
       arc_name:
@@ -15,8 +19,8 @@ on:
 #   KANIKO_CACHE_ARGS: "--cache --cache-copy-layers --cache-ttl=24h"
 
 jobs:
-
   build-to-dockerhub:
+    if: github.event.pull_request.merged == true
     runs-on:
       - ${{ inputs.arc_name }}
     container:
