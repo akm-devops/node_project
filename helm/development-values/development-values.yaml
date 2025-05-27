@@ -1,0 +1,4 @@
+connection: true
+domain: localhost
+liveDNSName: dev-demo-live.localhost
+previewDNSName: dev-demo-preview.localhost

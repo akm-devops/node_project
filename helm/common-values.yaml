@@ -5,19 +5,7 @@ replicaCount: 5
 image:
   repository: argoproj/rollouts-demo
   pullPolicy: IfNotPresent
-  tag: "green"
-
-controllerType: Rollout
-
-liveService: 'demo-live'
-previewService: 'demo-preview'
-serviceType: ClusterIP
-
-ports:
-  http:
-    port: 80
-
-targetPort: 8080
+  tag: "blue"
 
 # Chose only one type
 rolloutStrategy:
@@ -42,7 +30,14 @@ rolloutStrategy:
   #   - setWeight: 100
 
 
-connection: true
-domain: localhost
-liveDNSName: demo-live.localhost
-previewDNSName: demo-preview.localhost
+controllerType: Rollout
+
+liveService: 'demo-live'
+previewService: 'demo-preview'
+serviceType: ClusterIP
+
+ports:
+  http:
+    port: 80
+
+targetPort: 8080
