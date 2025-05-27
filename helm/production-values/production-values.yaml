@@ -2,9 +2,9 @@
 replicaCount: 5
 
 image:
-  repository: ashwinkmgowda/nodejs-image-demo
+  repository: argoproj/rollouts-demo
   pullPolicy: IfNotPresent
-  tag: "58"
+  tag: "blue"
 
 
 # Chose only one type
@@ -31,5 +31,5 @@ rolloutStrategy:
 
 connection: true
 domain: localhost
-liveDNSName: dev-demo-live.localhost
-previewDNSName: dev-demo-preview.localhost
+liveDNSName: prod-demo-live.localhost
+previewDNSName: prod-demo-preview.localhost
