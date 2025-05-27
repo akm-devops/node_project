@@ -1,35 +1,5 @@
 fullName: 'demo'
 
-replicaCount: 5
-
-image:
-  repository: argoproj/rollouts-demo
-  pullPolicy: IfNotPresent
-  tag: "blue"
-
-# Chose only one type
-rolloutStrategy:
-  blueGreen:
-    autoPromotionEnabled: true
-    autoPromotionSeconds: 15
-
-  # canary:
-  #   steps:
-  #   - setWeight: 20
-  #   - pause:
-  #       duration: 10s
-  #   - setWeight: 40
-  #   - pause:
-  #       duration: 10s
-  #   - setWeight: 60
-  #   - pause:
-  #       duration: 10s
-  #   - setWeight: 80
-  #   - pause:
-  #       duration: 10s
-  #   - setWeight: 100
-
-
 controllerType: Rollout
 
 liveService: 'demo-live'
