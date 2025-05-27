@@ -1,0 +1,13 @@
+fullName: 'demo'
+
+controllerType: Rollout
+
+liveService: 'demo-live'
+previewService: 'demo-preview'
+serviceType: ClusterIP
+
+ports:
+  http:
+    port: 80
+
+targetPort: 8080
