@@ -31,5 +31,5 @@ rolloutStrategy:
 
 connection: true
 domain: localhost
-liveDNSName: dev-demo-live.localhost
-previewDNSName: dev-demo-preview.localhost
+liveDNSName: staging-demo-live.localhost
+previewDNSName: staging-demo-preview.localhost
