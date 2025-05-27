@@ -3,9 +3,9 @@ fullName: 'demo'
 replicaCount: 5
 
 image:
-  repository: argoproj/rollouts-demo
+  repository: ashwinkmgowda/nodejs-image-demo
   pullPolicy: IfNotPresent
-  tag: "green"
+  tag: "59"
 
 controllerType: Rollout
 
