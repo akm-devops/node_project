@@ -2,7 +2,7 @@
 replicaCount: 5
 
 image:
-  repository: ashwinkmgowda/nodejs-image-demo
+  name: ashwinkmgowda/nodejs-image-demo
   pullPolicy: IfNotPresent
   tag: "58"
 
