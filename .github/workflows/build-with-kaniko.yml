@@ -67,14 +67,38 @@ jobs:
     permissions:
       contents: read # read the repository
 
+    # steps:
+    #   - name: Build and Push Image to Dockerhub with kaniko
+    #     run: |
+    #       cat <<EOF > /kaniko/.docker/config.json
+    #       { "auths": { "https://index.docker.io/v1/": { "auth": "${{ secrets.DOCKERHUB_AUTH }}" } } }
+    #       EOF
+          
+    #       /kaniko/executor --dockerfile="./Dockerfile" \
+    #         --context="${{ github.repositoryUrl }}#${{ github.ref }}#${{ github.sha }}"  \
+    #         --destination=ashwinkmgowda/nodejs-image-demo:${{ github.run_number }}\
+    #         --push-retry 5
+
     steps:
-      - name: Build and Push Image to Dockerhub with kaniko
+      - name: Determine base branch and sanitize
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            BASE_BRANCH="${{ github.event.pull_request.base.ref }}"
+          else
+            BASE_BRANCH="${GITHUB_REF#refs/heads/}"
+          fi
+
+          # Sanitize branch name for Docker tag (replace slashes with dashes)
+          SANITIZED_BRANCH=$(echo "$BASE_BRANCH" | sed 's#/#-#g')
+          echo "IMAGE_TAG=${SANITIZED_BRANCH}-${{ github.run_number }}" >> $GITHUB_ENV
+
+      - name: Build and Push Image to Dockerhub with Kaniko
         run: |
           cat <<EOF > /kaniko/.docker/config.json
           { "auths": { "https://index.docker.io/v1/": { "auth": "${{ secrets.DOCKERHUB_AUTH }}" } } }
           EOF
-          
+
           /kaniko/executor --dockerfile="./Dockerfile" \
-            --context="${{ github.repositoryUrl }}#${{ github.ref }}#${{ github.sha }}"  \
-            --destination=ashwinkmgowda/nodejs-image-demo:${{ github.run_number }}\
+            --context="${{ github.repositoryUrl }}#${{ github.ref }}#${{ github.sha }}" \
+            --destination=ashwinkmgowda/nodejs-image-demo:${IMAGE_TAG} \
             --push-retry 5
