@@ -23,6 +23,7 @@ rolloutStrategy:
     #   - pause:
     #       duration: 10s
     #   - setWeight: 100
+
 connection: true
 domain: localhost
 liveDNSName: staging-demo-live.localhost
