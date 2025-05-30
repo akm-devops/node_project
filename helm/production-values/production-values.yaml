@@ -24,6 +24,6 @@ rolloutStrategy:
     #       duration: 10s
     #   - setWeight: 100
 connection: true
-domain: localhost
-liveDNSName: prod-demo-live.localhost
-previewDNSName: prod-demo-preview.localhost
+domain: ashwingowda.com
+liveDNSName: prod-demo-live.ashwingowda.com
+previewDNSName: prod-demo-preview.ashwingowda.com

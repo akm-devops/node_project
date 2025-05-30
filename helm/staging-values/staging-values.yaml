@@ -8,22 +8,22 @@ rolloutStrategy:
   blueGreen:
     autoPromotionEnabled: true
     autoPromotionSeconds: 15
-  # canary:
-  #   steps:
-  #   - setWeight: 20
-  #   - pause:
-  #       duration: 10s
-  #   - setWeight: 40
-  #   - pause:
-  #       duration: 10s
-  #   - setWeight: 60
-  #   - pause:
-  #       duration: 10s
-  #   - setWeight: 80
-  #   - pause:
-  #       duration: 10s
-  #   - setWeight: 100
+    # canary:
+    #   steps:
+    #   - setWeight: 20
+    #   - pause:
+    #       duration: 10s
+    #   - setWeight: 40
+    #   - pause:
+    #       duration: 10s
+    #   - setWeight: 60
+    #   - pause:
+    #       duration: 10s
+    #   - setWeight: 80
+    #   - pause:
+    #       duration: 10s
+    #   - setWeight: 100
 connection: true
-domain: localhost
-liveDNSName: staging-demo-live.localhost
-previewDNSName: staging-demo-preview.localhost
+domain: ashwingowda.com
+liveDNSName: staging-demo-live.ashwingowda.com
+previewDNSName: staging-demo-preview.ashwingowda.com
