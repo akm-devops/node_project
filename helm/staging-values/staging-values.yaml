@@ -25,6 +25,6 @@ rolloutStrategy:
   #   - setWeight: 100
 
 connection: true
-domain: localhost
-liveDNSName: staging-demo-live.localhost
-previewDNSName: staging-demo-preview.localhost
+domain: ashwingowda.com
+liveDNSName: staging-demo-live.ashwingowda.com
+previewDNSName: staging-demo-preview.ashwingowda.com
