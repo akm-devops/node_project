@@ -2,30 +2,33 @@ replicaCount: 5
 image:
   name: ashwinkmgowda/nodejs-image-demo
   pullPolicy: IfNotPresent
-  tag: "63"
+  tag: "production-71"
 # Chose only one type
 rolloutStrategy:
   blueGreen:
     autoPromotionEnabled: true
     autoPromotionSeconds: 15
-
-  # canary:
-  #   steps:
-  #   - setWeight: 20
-  #   - pause:
-  #       duration: 10s
-  #   - setWeight: 40
-  #   - pause:
-  #       duration: 10s
-  #   - setWeight: 60
-  #   - pause:
-  #       duration: 10s
-  #   - setWeight: 80
-  #   - pause:
-  #       duration: 10s
-  #   - setWeight: 100
-
+    # canary:
+    #   steps:
+    #   - setWeight: 20
+    #   - pause:
+    #       duration: 10s
+    #   - setWeight: 40
+    #   - pause:
+    #       duration: 10s
+    #   - setWeight: 60
+    #   - pause:
+    #       duration: 10s
+    #   - setWeight: 80
+    #   - pause:
+    #       duration: 10s
+    #   - setWeight: 100
 connection: true
 domain: ashwingowda.com
-liveDNSName: prod-demo-live.ashwingowda.com
-previewDNSName: prod-demo-preview.ashwingowda.com
+<<<<<<< Updated upstream
+liveSubDomainName: prod-demo-live
+previewSubDomainName: prod-demo-preview
+=======
+liveDNSName: prod-demo-live
+previewDNSName: prod-demo-preview
+>>>>>>> Stashed changes
