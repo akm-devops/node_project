@@ -25,10 +25,5 @@ rolloutStrategy:
     #   - setWeight: 100
 connection: true
 domain: ashwingowda.com
-<<<<<<< Updated upstream
 liveSubDomainName: dev-demo-live
 previewSubDomainName: dev-demo-preview
-=======
-liveDNSName: dev-demo-live
-previewDNSName: dev-demo-preview
->>>>>>> Stashed changes
