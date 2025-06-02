@@ -2,7 +2,7 @@ replicaCount: 5
 image:
   name: ashwinkmgowda/nodejs-image-demo
   pullPolicy: IfNotPresent
-  tag: "production-71"
+  tag: "production-75"
 # Chose only one type
 rolloutStrategy:
   blueGreen:
