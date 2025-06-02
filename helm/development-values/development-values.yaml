@@ -6,7 +6,7 @@ image:
 # Chose only one type
 rolloutStrategy:
   blueGreen:
-    autoPromotionEnabled: true
+    autoPromotionEnabled: false
     autoPromotionSeconds: 15
     # canary:
     #   steps:
