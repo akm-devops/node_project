@@ -25,5 +25,5 @@ rolloutStrategy:
     #   - setWeight: 100
 connection: true
 domain: ashwingowda.com
-liveDNSName: dev-demo-live.ashwingowda.com
-previewDNSName: dev-demo-preview.ashwingowda.com
+liveSubDomainName: dev-demo-live
+previewSubDomainName: dev-demo-preview
