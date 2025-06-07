@@ -2,7 +2,7 @@ replicaCount: 5
 image:
   name: ashwinkmgowda/nodejs-image-demo
   pullPolicy: IfNotPresent
-  tag: "development-69"
+  tag: "development-73"
 # Chose only one type
 rolloutStrategy:
   blueGreen:
@@ -23,7 +23,6 @@ rolloutStrategy:
     #   - pause:
     #       duration: 10s
     #   - setWeight: 100
-
 externalConnection:
   enabled: true
   issuer:
