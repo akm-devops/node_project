@@ -24,7 +24,12 @@ rolloutStrategy:
   #       duration: 10s
   #   - setWeight: 100
 
-connection: true
-domain: ashwingowda.com
-liveSubDomainName: staging-demo-live
-previewSubDomainName: staging-demo-preview
+externalConnection:
+  enabled: true
+  issuer:
+    selfSigned: {}
+    # LetsEncryptStaging:
+    #   email: your-email@example.com
+  domain: ashwingowda.com
+  liveSubDomainName: staging-demo-live
+  previewSubDomainName: staging-demo-preview
