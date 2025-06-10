@@ -28,9 +28,9 @@ rolloutStrategy:
 externalConnection:
   enabled: true
   issuer:
-    selfSigned: {}
-    # LetsEncryptStaging:
-    #   email: your-email@example.com
+    # selfSigned: {}
+    LetsEncryptStaging:
+      email: kmashwinrocks@gmail.com
   domain: ashwingowda.com
   liveSubDomainName: prod-demo-live
   previewSubDomainName: prod-demo-preview
