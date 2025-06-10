@@ -25,10 +25,13 @@ rolloutStrategy:
     #   - setWeight: 100
 externalConnection:
   enabled: true
-  issuer:
+  issuerType: letsEncryptStaging  # "letsEncryptStaging" or "selfSigned"
+
+  issuerConfigs:
     selfSigned: {}
-    # LetsEncryptStaging:
-    #   email: kmashwinrocks@gmail.com
+
+    letsEncryptStaging:
+      email: kmashwinrocks@gmail.com
   domain: ashwingowda.com
   liveSubDomainName: dev-demo-live
   previewSubDomainName: dev-demo-preview
