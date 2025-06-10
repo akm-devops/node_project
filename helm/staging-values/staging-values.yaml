@@ -26,7 +26,7 @@ rolloutStrategy:
 
 externalConnection:
   enabled: true
-  issuerType: sletsEncryptStaging  # "letsEncryptStaging" or "selfSigned"
+  issuerType: letsEncryptStaging  # "letsEncryptStaging" or "selfSigned"
 
   issuerConfigs:
     selfSigned: {}
