@@ -2,7 +2,11 @@ replicaCount: 5
 image:
   name: ashwinkmgowda/nodejs-image-demo
   pullPolicy: IfNotPresent
+<<<<<<< Updated upstream
   tag: "staging-70"
+=======
+  tag: "staging-74"
+>>>>>>> Stashed changes
 # Chose only one type
 rolloutStrategy:
   blueGreen:
@@ -27,9 +31,15 @@ rolloutStrategy:
 externalConnection:
   enabled: true
   issuer:
+<<<<<<< Updated upstream
     # selfSigned: {}
     LetsEncryptStaging:
       email: kmashwinrocks@gmail.com
+=======
+    selfSigned: {}
+    # LetsEncryptStaging:
+    #   email: kmashwinrocks@gmail.com
+>>>>>>> Stashed changes
   domain: ashwingowda.com
   liveSubDomainName: staging-demo-live
   previewSubDomainName: staging-demo-preview
