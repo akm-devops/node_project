@@ -26,15 +26,9 @@ rolloutStrategy:
 externalConnection:
   enabled: true
   issuer:
-<<<<<<< Updated upstream
-    # selfSigned: {}
-    LetsEncryptStaging:
-      email: kmashwinrocks@gmail.com
-=======
     selfSigned: {}
     # LetsEncryptStaging:
     #   email: kmashwinrocks@gmail.com
->>>>>>> Stashed changes
   domain: ashwingowda.com
   liveSubDomainName: dev-demo-live
   previewSubDomainName: dev-demo-preview
