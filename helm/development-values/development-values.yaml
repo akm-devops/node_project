@@ -23,13 +23,12 @@ rolloutStrategy:
     #   - pause:
     #       duration: 10s
     #   - setWeight: 100
-
 externalConnection:
   enabled: true
   issuer:
-    # selfSigned: {}
-    LetsEncryptStaging:
-      email: kmashwinrocks@gmail.com
+    selfSigned: {}
+    # LetsEncryptStaging:
+    #   email: kmashwinrocks@gmail.com
   domain: ashwingowda.com
   liveSubDomainName: dev-demo-live
   previewSubDomainName: dev-demo-preview
