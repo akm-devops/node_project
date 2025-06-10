@@ -32,7 +32,7 @@ externalConnection:
   issuerConfigs:
     selfSigned: {}
 
-    LetsEncryptStaging:
+    letsEncryptStaging:
       email: kmashwinrocks@gmail.com
   domain: ashwingowda.com
   liveSubDomainName: prod-demo-live

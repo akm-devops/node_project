@@ -26,12 +26,12 @@ rolloutStrategy:
 
 externalConnection:
   enabled: true
-  issuerType: letsEncryptStaging  # "letsEncryptStaging" or "selfSigned"
+  issuerType: selfSigned  # "letsEncryptStaging" or "selfSigned"
 
   issuerConfigs:
     selfSigned: {}
 
-    LetsEncryptStaging:
+    letsEncryptStaging:
       email: kmashwinrocks@gmail.com
   domain: ashwingowda.com
   liveSubDomainName: staging-demo-live
