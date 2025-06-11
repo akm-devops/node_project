@@ -4,7 +4,7 @@ image:
   # name: ashwinkmgowda/nodejs-image-demo
   pullPolicy: IfNotPresent
   # tag: "staging-74"
-  tag: "green"
+  tag: "blue"
 controller:
   type: Deployment
 # Chose only one type
