@@ -1,8 +1,10 @@
-replicaCount: 5
+replicaCount: 3
 image:
-  name: ashwinkmgowda/nodejs-image-demo
+  name: argoproj/rollouts-demo
+  # name: ashwinkmgowda/nodejs-image-demo
   pullPolicy: IfNotPresent
-  tag: "development-73"
+  # tag: "staging-74"
+  tag: "blue"
 controller:
   type: Deployment
 # Chose only one type
@@ -36,6 +38,7 @@ controller:
 
   # strategy:
   #   type: Recreate
+
 externalConnection:
   enabled: true
   issuerType: letsEncryptStaging  # "letsEncryptStaging" or "selfSigned"
