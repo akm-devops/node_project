@@ -1,9 +1,11 @@
 fullName: 'demo'
 
-controllerType: Rollout
+controller:
+  type: Rollout
+  liveService: 'demo-live'
+  previewService: 'demo-preview'
 
-liveService: 'demo-live'
-previewService: 'demo-preview'
+
 serviceType: ClusterIP
 
 ports:

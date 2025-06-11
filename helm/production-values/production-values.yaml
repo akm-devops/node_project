@@ -4,27 +4,27 @@ image:
   pullPolicy: IfNotPresent
   tag: "production-75"
 # Chose only one type
-rolloutStrategy:
-  blueGreen:
+  strategy:
+    type: blueGreen
     autoPromotionEnabled: true
     autoPromotionSeconds: 15
-
-  # canary:
-  #   steps:
-  #   - setWeight: 20
-  #   - pause:
-  #       duration: 10s
-  #   - setWeight: 40
-  #   - pause:
-  #       duration: 10s
-  #   - setWeight: 60
-  #   - pause:
-  #       duration: 10s
-  #   - setWeight: 80
-  #   - pause:
-  #       duration: 10s
-  #   - setWeight: 100
-
+  # strategy:
+  #   type: canary
+  #   canarySpec:
+  #     steps:
+  #     - setWeight: 20
+  #     - pause:
+  #         duration: 10s
+  #     - setWeight: 40
+  #     - pause:
+  #         duration: 10s
+  #     - setWeight: 60
+  #     - pause:
+  #         duration: 10s
+  #     - setWeight: 80
+  #     - pause:
+  #         duration: 10s
+  #     - setWeight: 100
 externalConnection:
   enabled: true
   issuerType: letsEncryptStaging  # "letsEncryptStaging" or "selfSigned"
