@@ -1,8 +1,10 @@
 replicaCount: 4
 image:
-  name: argoproj/rollouts-demo
+  # name: argoproj/rollouts-demo
+  name: ashwinkmgowda/nodejs-image-demo
   pullPolicy: IfNotPresent
-  tag: "green"
+  tag: "staging-74"
+  # tag: "green"
 controller:
   type: Deployment
 # Chose only one type
