@@ -2,7 +2,7 @@ replicaCount: 5
 image:
   name: argoproj/rollouts-demo
   pullPolicy: IfNotPresent
-  tag: "blue"
+  tag: "green"
 controller:
   type: Deployment
 # Chose only one type
