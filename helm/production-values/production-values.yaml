@@ -3,11 +3,13 @@ image:
   name: ashwinkmgowda/nodejs-image-demo
   pullPolicy: IfNotPresent
   tag: "production-75"
+controller:
+  type: Deployment
 # Chose only one type
-  strategy:
-    type: blueGreen
-    autoPromotionEnabled: true
-    autoPromotionSeconds: 15
+  # strategy:
+  #   type: blueGreen
+  #   autoPromotionEnabled: true
+  #   autoPromotionSeconds: 15
   # strategy:
   #   type: canary
   #   canarySpec:
@@ -25,6 +27,15 @@ image:
   #     - pause:
   #         duration: 10s
   #     - setWeight: 100
+  # For Deployment, use one of the following: (choose only one type)
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+
+  # strategy:
+  #   type: Recreate
 externalConnection:
   enabled: true
   issuerType: letsEncryptStaging  # "letsEncryptStaging" or "selfSigned"
