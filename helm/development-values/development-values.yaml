@@ -3,11 +3,11 @@ image:
   # name: argoproj/rollouts-demo
   name: ashwinkmgowda/nodejs-image-demo
   pullPolicy: IfNotPresent
-  tag: "development-76"
+  tag: "development-77"
   # tag: "green"
 controller:
   type: Deployment
-# Chose only one type
+  # Chose only one type
   # strategy:
   #   type: blueGreen
   #   autoPromotionEnabled: true
@@ -35,17 +35,13 @@ controller:
     rollingUpdate:
       maxSurge: 1
       maxUnavailable: 0
-
-  # strategy:
-  #   type: Recreate
-
+      # strategy:
+      #   type: Recreate
 externalConnection:
   enabled: true
-  issuerType: letsEncryptStaging  # "letsEncryptStaging" or "selfSigned"
-
+  issuerType: letsEncryptStaging # "letsEncryptStaging" or "selfSigned"
   issuerConfigs:
     selfSigned: {}
-
     letsEncryptStaging:
       email: kmashwinrocks@gmail.com
   domain: ashwingowda.com
