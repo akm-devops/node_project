@@ -1,4 +1,4 @@
-replicaCount: 5
+replicaCount: 3
 image:
   name: argoproj/rollouts-demo
   # name: ashwinkmgowda/nodejs-image-demo
@@ -30,14 +30,15 @@ controller:
   #         duration: 10s
   #     - setWeight: 100
   # For Deployment, use one of the following: (choose only one type)
-  # strategy:
-  #   type: RollingUpdate
-  #   rollingUpdate:
-  #     maxSurge: 1
-  #     maxUnavailable: 0
-
   strategy:
-    type: Recreate
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+
+  # strategy:
+  #   type: Recreate
+
 externalConnection:
   enabled: true
   issuerType: letsEncryptStaging  # "letsEncryptStaging" or "selfSigned"
