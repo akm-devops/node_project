@@ -1,7 +1,6 @@
 fullName: 'demo'
 
 controller:
-  type: Rollout
   liveService: 'demo-live'
   previewService: 'demo-preview'
 
