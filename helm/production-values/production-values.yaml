@@ -3,7 +3,7 @@ image:
   # name: argoproj/rollouts-demo
   name: ashwinkmgowda/nodejs-image-demo
   pullPolicy: IfNotPresent
-  tag: "production-79"
+  tag: "production-82"
   # tag: "green"
 controller:
   type: Deployment
