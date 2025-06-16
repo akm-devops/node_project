@@ -3,11 +3,11 @@ name: Branch Deploy
 on:
   workflow_dispatch:
     # This workflow is triggered manually via the GitHub UI
-    inputs:
-      branch_name:
-        description: 'Choose the target branch to deploy'
-        required: true
-        default: 'development'
+    # inputs:
+    #   branch_name:
+    #     description: 'Choose the target branch to deploy'
+    #     required: true
+    #     default: 'development'
 
 jobs:
   deploy:
@@ -55,9 +55,9 @@ jobs:
     #         echo "$BRANCH_INFO" | awk '{print $2}' | sed 's|refs/heads/||'
     #       fi
               
-      - name: Print current branch name
-        run: |
-            echo "Current branch: ${{ github.ref_name }}"
+    #   - name: Print current branch name
+    #     run: |
+    #         echo "Current branch: ${{ github.ref_name }}"
 
       - name: Deploy to branch
         run: |
