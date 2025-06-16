@@ -2,6 +2,12 @@ name: Branch Deploy
 
 on:
   workflow_dispatch:
+    # This workflow is triggered manually via the GitHub UI
+    inputs:
+      branch_name:
+        description: 'Choose the target branch to deploy'
+        required: true
+        default: 'development'
 
 jobs:
   deploy:
@@ -13,6 +19,14 @@ jobs:
         with:
           version: v3.0.6 # optional 
 
+      - name: ArgoCD Login
+        run: |
+          argocd login argocd.ashwingowda.com --username admin --password ${{ secrets.ARGOCD_PASSWORD }}
+
+      - name: ArgoCD Logout
+        run: |
+          argocd logout argocd.ashwingowda.com
+          # Ensure to log out after the operations to clean up session
       - name: Deploy to branch
         run: |
           which argocd
