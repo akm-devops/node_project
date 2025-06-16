@@ -3,11 +3,12 @@ name: Branch Deploy
 on:
   workflow_dispatch:
     # This workflow is triggered manually via the GitHub UI
-    # inputs:
-    #   branch_name:
-    #     description: 'Choose the target branch to deploy'
-    #     required: true
-    #     default: 'development'
+    inputs:
+      image_tag:
+        description: 'Choose the image tag to deploy'
+        required: false
+        type: string
+        default: ''
 
 jobs:
   deploy:
@@ -65,6 +66,13 @@ jobs:
               --source-position 2 \
               --grpc-web \
               --revision ${{ github.ref_name }}
+
+      - name: Update image tag
+        if: ${{ github.event.inputs.image_tag != '' }}
+        run: |
+          argocd app set node-project-development \
+            --source-position 1 \
+            --helm-set image.tag=${{ github.event.inputs.image_tag }}
 
       - name: ArgoCD Logout
         run: |
