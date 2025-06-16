@@ -19,7 +19,7 @@ jobs:
         with:
           fetch-depth: 0  # Ensure full history is fetched for branch checks
           # This is important to ensure that the branch exists in the remote repository
-          
+
       - name: Setup ArgoCD CLI 
         uses: imajeetyadav/argocd-cli@v1
         with:
@@ -42,13 +42,29 @@ jobs:
             echo "Branch ${{ github.event.inputs.branch_name }} does not exist."
             exit 1
           fi
-          
+
+      - name: Check if branch exists and print only branch name
+        run: |
+          BRANCH="${{ github.event.inputs.branch_name }}"
+          BRANCH_INFO=$(git ls-remote --heads origin "$BRANCH")
+              
+          if [ -z "$BRANCH_INFO" ]; then
+            echo "Branch $BRANCH does not exist."
+            exit 1
+          else
+            echo "$BRANCH_INFO" | awk '{print $2}' | sed 's|refs/heads/||'
+          fi
+              
       - name: Deploy to branch
         run: |
             argocd app set node-project-development \
               --source-position 2 \
               --grpc-web \
               --revision ${{ github.event.inputs.branch_name }}
+
+      - name: Print current branch name
+        run: |
+            echo "Current branch: ${{ github.ref_name }}"
 
       - name: ArgoCD Logout
         run: |
