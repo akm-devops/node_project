@@ -43,28 +43,28 @@ jobs:
             exit 1
           fi
 
-      - name: Check if branch exists and print only branch name
+    #   - name: Check if branch exists and print only branch name
+    #     run: |
+    #       BRANCH="${{ github.event.inputs.branch_name }}"
+    #       BRANCH_INFO=$(git ls-remote --heads origin "$BRANCH")
+              
+    #       if [ -z "$BRANCH_INFO" ]; then
+    #         echo "Branch $BRANCH does not exist."
+    #         exit 1
+    #       else
+    #         echo "$BRANCH_INFO" | awk '{print $2}' | sed 's|refs/heads/||'
+    #       fi
+              
+      - name: Print current branch name
         run: |
-          BRANCH="${{ github.event.inputs.branch_name }}"
-          BRANCH_INFO=$(git ls-remote --heads origin "$BRANCH")
-              
-          if [ -z "$BRANCH_INFO" ]; then
-            echo "Branch $BRANCH does not exist."
-            exit 1
-          else
-            echo "$BRANCH_INFO" | awk '{print $2}' | sed 's|refs/heads/||'
-          fi
-              
+            echo "Current branch: ${{ github.ref_name }}"
+
       - name: Deploy to branch
         run: |
             argocd app set node-project-development \
               --source-position 2 \
               --grpc-web \
-              --revision ${{ github.event.inputs.branch_name }}
-
-      - name: Print current branch name
-        run: |
-            echo "Current branch: ${{ github.ref_name }}"
+              --revision ${{ github.ref_name }}
 
       - name: ArgoCD Logout
         run: |
