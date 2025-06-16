@@ -26,9 +26,16 @@ jobs:
             --password ${{ secrets.ARGOCD_PASSWORD }} \
             --insecure
 
-      - name: Deploy to branch
+      - name: Get App Details
         run: |
           argocd app get node-project-development
+          
+      - name: Deploy to branch
+        run: |
+            argocd app set node-project-development \
+              --source-position 2 \
+              --grpc-web \
+              --revision ${{ github.event.inputs.branch_name }}
 
       - name: ArgoCD Logout
         run: |
