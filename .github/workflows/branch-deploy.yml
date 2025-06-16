@@ -29,6 +29,13 @@ jobs:
       - name: Get App Details
         run: |
           argocd app get node-project-development
+
+      - name: Check if branch exists
+        run: |
+          if ! git ls-remote --heads origin ${{ github.event.inputs.branch_name }}; then
+            echo "Branch ${{ github.event.inputs.branch_name }} does not exist."
+            exit 1
+          fi
           
       - name: Deploy to branch
         run: |
