@@ -21,7 +21,10 @@ jobs:
 
       - name: ArgoCD Login
         run: |
-          argocd login argocd.ashwingowda.com --username admin --password ${{ secrets.ARGOCD_PASSWORD }}
+          argocd login argocd.ashwingowda.com \
+            --username admin \
+            --password ${{ secrets.ARGOCD_PASSWORD }} \
+            --insecure
 
       - name: ArgoCD Logout
         run: |
