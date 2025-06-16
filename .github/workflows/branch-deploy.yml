@@ -14,6 +14,12 @@ jobs:
     name: Deploy Branch
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Ensure full history is fetched for branch checks
+          # This is important to ensure that the branch exists in the remote repository
+          
       - name: Setup ArgoCD CLI 
         uses: imajeetyadav/argocd-cli@v1
         with:
