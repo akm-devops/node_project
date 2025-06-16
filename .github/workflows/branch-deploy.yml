@@ -26,11 +26,11 @@ jobs:
             --password ${{ secrets.ARGOCD_PASSWORD }} \
             --insecure
 
+      - name: Deploy to branch
+        run: |
+          argocd app get node-project-development
+
       - name: ArgoCD Logout
         run: |
           argocd logout argocd.ashwingowda.com
           # Ensure to log out after the operations to clean up session
-      - name: Deploy to branch
-        run: |
-          which argocd
-          argocd --help
