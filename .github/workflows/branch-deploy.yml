@@ -1,0 +1,19 @@
+name: Branch Deploy
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy Branch
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup ArgoCD CLI 
+        uses: imajeetyadav/argocd-cli@v1
+        with:
+          version: v3.0.6 # optional 
+
+      - name: Deploy to branch
+        run: |
+          which argocd
+          argocd --help
