@@ -40,7 +40,7 @@ controller:
   #   type: Recreate
 externalConnection:
   enabled: true
-  issuerType: letsEncryptStaging  # "letsEncryptStaging" or "selfSigned"
+  issuerType: selfSigned  # "letsEncryptStaging" or "selfSigned"
 
   issuerConfigs:
     selfSigned: {}
