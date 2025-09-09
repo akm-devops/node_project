@@ -44,6 +44,6 @@ externalConnection:
     selfSigned: {}
     letsEncryptStaging:
       email: kmashwinrocks@gmail.com
-  domain: ashwingowda.com
+  domain: localhost
   liveSubDomainName: dev-demo-live
   previewSubDomainName: dev-demo-preview
