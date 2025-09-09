@@ -47,9 +47,9 @@ on:
           - runner-scale-set-dind
           - ubuntu-latest
 
-  pull_request:
-    types:
-      - closed
+  # pull_request:
+  #   types:
+  #     - closed
 
 # env:
 #   KANIKO_CACHE_ARGS: "--cache --cache-copy-layers --cache-ttl=24h"
