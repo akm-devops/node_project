@@ -47,20 +47,20 @@ on:
           - runner-scale-set-dind
           - ubuntu-latest
 
-  pull_request:
-    types:
-      - closed
+  # pull_request:
+  #   types:
+  #     - closed
 
 # env:
 #   KANIKO_CACHE_ARGS: "--cache --cache-copy-layers --cache-ttl=24h"
 
 jobs:
   build-to-dockerhub:
-    if: github.event.pull_request.merged == true
-    # runs-on:
-    #   - ${{ inputs.arc_name }}
+    # if: github.event.pull_request.merged == true
+    runs-on:
+      - ${{ inputs.runner }}
 
-    runs-on: ${{ github.event_name == 'workflow_dispatch' && inputs.runner || (github.event.pull_request.merged == true && 'ubuntu-latest' ) }}
+    # runs-on: ${{ github.event_name == 'workflow_dispatch' && inputs.runner || (github.event.pull_request.merged == true && 'ubuntu-latest' ) }}
 
     container:
       image: gcr.io/kaniko-project/executor:v1.23.2-debug # the kaniko image
