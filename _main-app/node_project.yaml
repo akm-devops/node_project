@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: node-project
+  namespace: argocd
+  # finalizers:
+  #   - resources-finalizer.argocd.argoproj.io
+  # annotations:
+  #   argocd-image-updater.argoproj.io/write-back-method: git:secret:argocd/git-creds
+  #   argocd-image-updater.argoproj.io/git-repository: https://github.com/akm-devops/node_project.git
+  #   argocd-image-updater.argoproj.io/git-branch: development
+  #   argocd-image-updater.argoproj.io/write-back-target: "helmvalues:/helm/development-values/development-values.yaml"
+  #   argocd-image-updater.argoproj.io/image-list: node-project=ashwinkmgowda/nodejs-image-demo
+  #   argocd-image-updater.argoproj.io/node-project.helm.image-name: image.name
+  #   argocd-image-updater.argoproj.io/node-project.helm.image-tag: image.tag
+  #   argocd-image-updater.argoproj.io/node-project.update-strategy: alphabetical
+  #   argocd-image-updater.argoproj.io/node-project.allow-tags: regexp:^development-[0-9]+$
+spec:
+  project: main
+  sources:
+    - repoURL: https://ashwinkmdevops.github.io/helm-charts
+      chart: argodemo
+      targetRevision: 0.1.9
+      helm:
+        valueFiles:
+          - $values/helm/development-values/development-values.yaml
+          - $values/helm/common-values.yaml
+    - repoURL: https://github.com/akm-devops/node_project.git
+      targetRevision: development
+      ref: values
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: 'main-app'
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+

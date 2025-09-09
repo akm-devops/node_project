@@ -1,0 +1,49 @@
+replicaCount: 3
+image:
+  # name: argoproj/rollouts-demo
+  name: ashwinkmgowda/nodejs-image-demo
+  pullPolicy: IfNotPresent
+  tag: "development-99"
+  # tag: "green"
+controller:
+  type: Deployment
+  # Chose only one type
+  # strategy:
+  #   type: blueGreen
+  #   autoPromotionEnabled: true
+  #   autoPromotionSeconds: 15
+  # strategy:
+  #   type: canary
+  #   canarySpec:
+  #     steps:
+  #     - setWeight: 20
+  #     - pause:
+  #         duration: 10s
+  #     - setWeight: 40
+  #     - pause:
+  #         duration: 10s
+  #     - setWeight: 60
+  #     - pause:
+  #         duration: 10s
+  #     - setWeight: 80
+  #     - pause:
+  #         duration: 10s
+  #     - setWeight: 100
+  # For Deployment, use one of the following: (choose only one type)
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+      # strategy:
+      #   type: Recreate
+externalConnection:
+  enabled: true
+  issuerType: selfSigned # "letsEncryptStaging" or "selfSigned"
+  issuerConfigs:
+    selfSigned: {}
+    letsEncryptStaging:
+      email: kmashwinrocks@gmail.com
+  domain: localhost
+  liveSubDomainName: dev-demo-live
+  previewSubDomainName: dev-demo-preview
