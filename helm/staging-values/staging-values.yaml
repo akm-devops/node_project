@@ -3,7 +3,7 @@ image:
   # name: argoproj/rollouts-demo
   name: ashwinkmgowda/nodejs-image-demo
   pullPolicy: IfNotPresent
-  tag: "staging-97"
+  tag: "staging-100"
   # tag: "green"
 controller:
   type: Deployment
@@ -39,7 +39,7 @@ controller:
       #   type: Recreate
 externalConnection:
   enabled: true
-  issuerType: letsEncryptStaging # "letsEncryptStaging" or "selfSigned"
+  issuerType: selfSigned  # "letsEncryptStaging" or "selfSigned"
   issuerConfigs:
     selfSigned: {}
     letsEncryptStaging:
