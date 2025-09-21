@@ -60,7 +60,8 @@ jobs:
 
     - name: Set Image Tags
       run: |
-        echo "IMAGE_TAGS=latest ${{ steps.set-vars.outputs.image_tag_sha }} ${{ steps.determine-branch.outputs.image_tag_branch }}" >> $GITHUB_ENV
+        echo "IMAGE_TAGS=latest\n${{ steps.set-vars.outputs.image_tag_sha }}\n${{ steps.determine-branch.outputs.image_tag_branch }}" >> $GITHUB_ENV
+        # echo "IMAGE_TAGS=latest ${{ steps.set-vars.outputs.image_tag_sha }} ${{ steps.determine-branch.outputs.image_tag_branch }}" >> $GITHUB_ENV
 
     - name: Build Image
       id: build-image
