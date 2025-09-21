@@ -21,44 +21,13 @@ on:
           - runner-scale-set-dind
           - ubuntu-latest
 
+env:
+  IMAGE_NAME: nodejs-image-demo
+  # IMAGE_TAGS: v1 ${{ github.sha }}
+  IMAGE_REGISTRY: docker.io
+  IMAGE_NAMESPACE: ashwinkmgowda
 
 jobs:
-  # build-to-dockerhub:
-  #   # if: github.event.pull_request.merged == true
-  #   runs-on:
-  #     - ${{ inputs.runner }}
-
-  #   # runs-on: ${{ github.event_name == 'workflow_dispatch' && inputs.runner || (github.event.pull_request.merged == true && 'ubuntu-latest' ) }}
-
-  #   container:
-  #     image: gcr.io/kaniko-project/executor:v1.23.2-debug # the kaniko image
-  #   permissions:
-  #     contents: read # read the repository
-
-  #   steps:
-  #     - name: Determine base branch and sanitize
-  #       run: |
-  #         if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-  #           BASE_BRANCH="${{ github.event.pull_request.base.ref }}"
-  #         else
-  #           BASE_BRANCH="${GITHUB_REF#refs/heads/}"
-  #         fi
-
-  #         # Sanitize branch name for Docker tag (replace slashes with dashes)
-  #         SANITIZED_BRANCH=$(echo "$BASE_BRANCH" | sed 's#/#-#g')
-  #         echo "IMAGE_TAG=${SANITIZED_BRANCH}-${{ github.run_number }}" >> $GITHUB_ENV
-
-  #     - name: Build and Push Image to Dockerhub with Kaniko
-  #       run: |
-  #         cat <<EOF > /kaniko/.docker/config.json
-  #         { "auths": { "https://index.docker.io/v1/": { "auth": "${{ secrets.DOCKERHUB_AUTH }}" } } }
-  #         EOF
-
-  #         /kaniko/executor --dockerfile="./Dockerfile" \
-  #           --context="${{ github.repositoryUrl }}#${{ github.ref }}#${{ github.sha }}" \
-  #           --destination=ashwinkmgowda/nodejs-image-demo:${IMAGE_TAG} \
-  #           --push-retry 5
-
 
   build:
     name: Build and push image
@@ -79,6 +48,9 @@ jobs:
         # echo "image_tag=$(echo $GITHUB_SHA  | cut -c1-6)" >> $GITHUB_OUTPUT
         echo "image_tag_sha=$(echo $GITHUB_SHA)" >> $GITHUB_OUTPUT
 
+    - name: print set vars
+      run: |
+        echo "Image Tag SHA: ${{ steps.set-vars.outputs.image_tag_sha }}"
     - name: Determine base branch and sanitize
       id: determine-branch
       run: |
@@ -90,14 +62,21 @@ jobs:
 
         # Sanitize branch name for Docker tag (replace slashes with dashes)
         SANITIZED_BRANCH=$(echo "$BASE_BRANCH" | sed 's#/#-#g')
-        echo "image_tag_branch=${SANITIZED_BRANCH}-${{ github.run_number }}" >> $GITHUB_ENV
+        echo "image_tag_branch=${SANITIZED_BRANCH}-${{ github.run_number }}" >> $GITHUB_OUTPUT
 
+    - name: print branch vars
+      run: |
+        echo "Image Tag Branch: ${{ steps.determine-branch.outputs.image_tag_branch }}"
+
+    - name: Set Image Tags
+      run: |
+        echo "IMAGE_TAGS=latest ${{ steps.set-vars.outputs.image_tag_sha }} ${{ steps.determine-branch.outputs.image_tag_branch }}" >> $GITHUB_ENV
     - name: Build Image
       id: build-image
       uses: redhat-actions/buildah-build@v2
       with:
-        image: nodejs-image-demo
-        tags: latest ${{ steps.determine-branch.outputs.image_tag_branch }} ${{ steps.set-vars.outputs.image_tag }}
+        image: ${{ env.IMAGE_NAME }}
+        tags: ${{ env.IMAGE_TAGS }}
         containerfiles: |
           ./Dockerfile
 
@@ -107,9 +86,8 @@ jobs:
       with:
         image: ${{ steps.build-image.outputs.image }}
         tags: ${{ steps.build-image.outputs.tags }}
-        registry: docker.io/ashwinkmgowda
+        registry: ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAMESPACE }}
         username: ${{ secrets.DOCKERHUB_USERNAME }}
-        # username: ashwinkmgowda
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
     - name: Print image url
