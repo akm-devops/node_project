@@ -1,0 +1,102 @@
+name: Build with Buildah
+
+on:
+  # schedule:
+  #   - cron: '50 6 * * *'  # Runs at 12:00 AM UTC every day (7 PM EST the previous day)
+  #   # - cron: '0 0 * * 1-5'  # Runs Mon–Fri at 12:00 AM UTC (7 PM EST the previous day)
+  # workflow_run:
+  #   workflows: ["Cypress Tests Workflow Run"]
+  #   types:
+  #     - completed
+
+  workflow_dispatch:
+    inputs:
+      runner:
+        description: 'Choose the Runner'
+        required: true
+        default: 'ubuntu-latest'
+        type: choice
+        options:
+          - runner-scale-set-kubernetes
+          - runner-scale-set-dind
+          - ubuntu-latest
+
+
+jobs:
+  # build-to-dockerhub:
+  #   # if: github.event.pull_request.merged == true
+  #   runs-on:
+  #     - ${{ inputs.runner }}
+
+  #   # runs-on: ${{ github.event_name == 'workflow_dispatch' && inputs.runner || (github.event.pull_request.merged == true && 'ubuntu-latest' ) }}
+
+  #   container:
+  #     image: gcr.io/kaniko-project/executor:v1.23.2-debug # the kaniko image
+  #   permissions:
+  #     contents: read # read the repository
+
+  #   steps:
+  #     - name: Determine base branch and sanitize
+  #       run: |
+  #         if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+  #           BASE_BRANCH="${{ github.event.pull_request.base.ref }}"
+  #         else
+  #           BASE_BRANCH="${GITHUB_REF#refs/heads/}"
+  #         fi
+
+  #         # Sanitize branch name for Docker tag (replace slashes with dashes)
+  #         SANITIZED_BRANCH=$(echo "$BASE_BRANCH" | sed 's#/#-#g')
+  #         echo "IMAGE_TAG=${SANITIZED_BRANCH}-${{ github.run_number }}" >> $GITHUB_ENV
+
+  #     - name: Build and Push Image to Dockerhub with Kaniko
+  #       run: |
+  #         cat <<EOF > /kaniko/.docker/config.json
+  #         { "auths": { "https://index.docker.io/v1/": { "auth": "${{ secrets.DOCKERHUB_AUTH }}" } } }
+  #         EOF
+
+  #         /kaniko/executor --dockerfile="./Dockerfile" \
+  #           --context="${{ github.repositoryUrl }}#${{ github.ref }}#${{ github.sha }}" \
+  #           --destination=ashwinkmgowda/nodejs-image-demo:${IMAGE_TAG} \
+  #           --push-retry 5
+
+
+  build:
+    name: Build and push image
+    runs-on:
+      - ${{ inputs.runner }}
+    permissions:
+      packages: write
+      contents: read
+      attestations: write
+      id-token: write
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set Build Variables
+      id: set-vars
+      run: |
+        echo "image_tag=$(echo $GITHUB_SHA  | cut -c1-6)" >> $GITHUB_OUTPUT
+
+    - name: Build Image
+      id: build-image
+      uses: redhat-actions/buildah-build@v2
+      with:
+        image: nodejs-image-demo
+        tags: latest ${{ steps.set-vars.outputs.image_tag }}
+        containerfiles: |
+          ./Dockerfile
+
+    - name: Push To dockerhub
+      id: push-to-ghcr
+      uses: redhat-actions/push-to-registry@v2
+      with:
+        image: ${{ steps.build-image.outputs.image }}
+        tags: ${{ steps.build-image.outputs.tags }}
+        registry: docker.io/ashwinkmgowda
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        # username: ashwinkmgowda
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Print image url
+      run: echo "Image pushed to ${{ steps.push-to-ghcr.outputs.registry-paths }}"
