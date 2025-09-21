@@ -76,14 +76,28 @@ jobs:
     - name: Set Build Variables
       id: set-vars
       run: |
-        echo "image_tag=$(echo $GITHUB_SHA  | cut -c1-6)" >> $GITHUB_OUTPUT
+        # echo "image_tag=$(echo $GITHUB_SHA  | cut -c1-6)" >> $GITHUB_OUTPUT
+        echo "image_tag_sha=$(echo $GITHUB_SHA)" >> $GITHUB_OUTPUT
+
+    - name: Determine base branch and sanitize
+      id: determine-branch
+      run: |
+        if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+          BASE_BRANCH="${{ github.event.pull_request.base.ref }}"
+        else
+          BASE_BRANCH="${GITHUB_REF#refs/heads/}"
+        fi
+
+        # Sanitize branch name for Docker tag (replace slashes with dashes)
+        SANITIZED_BRANCH=$(echo "$BASE_BRANCH" | sed 's#/#-#g')
+        echo "image_tag_branch=${SANITIZED_BRANCH}-${{ github.run_number }}" >> $GITHUB_ENV
 
     - name: Build Image
       id: build-image
       uses: redhat-actions/buildah-build@v2
       with:
         image: nodejs-image-demo
-        tags: latest ${{ steps.set-vars.outputs.image_tag }}
+        tags: latest ${{ steps.determine-branch.outputs.image_tag_branch }} ${{ steps.set-vars.outputs.image_tag }}
         containerfiles: |
           ./Dockerfile
 
