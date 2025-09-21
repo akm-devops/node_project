@@ -1,14 +1,6 @@
 name: Build with Buildah
 
 on:
-  # schedule:
-  #   - cron: '50 6 * * *'  # Runs at 12:00 AM UTC every day (7 PM EST the previous day)
-  #   # - cron: '0 0 * * 1-5'  # Runs Mon–Fri at 12:00 AM UTC (7 PM EST the previous day)
-  # workflow_run:
-  #   workflows: ["Cypress Tests Workflow Run"]
-  #   types:
-  #     - completed
-
   workflow_dispatch:
     inputs:
       runner:
@@ -23,16 +15,13 @@ on:
 
 env:
   IMAGE_NAME: nodejs-image-demo
-  # IMAGE_TAGS: v1 ${{ github.sha }}
   IMAGE_REGISTRY: docker.io
   IMAGE_NAMESPACE: ashwinkmgowda
 
 jobs:
-
   build:
     name: Build and push image
-    runs-on:
-      - ${{ inputs.runner }}
+    runs-on: ${{ inputs.runner }}
     permissions:
       packages: write
       contents: read
@@ -46,11 +35,12 @@ jobs:
       id: set-vars
       run: |
         # echo "image_tag=$(echo $GITHUB_SHA  | cut -c1-6)" >> $GITHUB_OUTPUT
-        echo "image_tag_sha=$(echo $GITHUB_SHA)" >> $GITHUB_OUTPUT
+        echo "image_tag_sha=${GITHUB_SHA}" >> $GITHUB_OUTPUT
 
-    - name: print set vars
+    - name: Print SHA tag
       run: |
         echo "Image Tag SHA: ${{ steps.set-vars.outputs.image_tag_sha }}"
+
     - name: Determine base branch and sanitize
       id: determine-branch
       run: |
@@ -64,13 +54,14 @@ jobs:
         SANITIZED_BRANCH=$(echo "$BASE_BRANCH" | sed 's#/#-#g')
         echo "image_tag_branch=${SANITIZED_BRANCH}-${{ github.run_number }}" >> $GITHUB_OUTPUT
 
-    - name: print branch vars
+    - name: Print branch tag
       run: |
         echo "Image Tag Branch: ${{ steps.determine-branch.outputs.image_tag_branch }}"
 
     - name: Set Image Tags
       run: |
-        echo "IMAGE_TAGS=latest,${{ steps.set-vars.outputs.image_tag_sha }},${{ steps.determine-branch.outputs.image_tag_branch }}" >> $GITHUB_ENV
+        echo "IMAGE_TAGS=latest ${{ steps.set-vars.outputs.image_tag_sha }} ${{ steps.determine-branch.outputs.image_tag_branch }}" >> $GITHUB_ENV
+
     - name: Build Image
       id: build-image
       uses: redhat-actions/buildah-build@v2
@@ -80,8 +71,8 @@ jobs:
         containerfiles: |
           ./Dockerfile
 
-    - name: Push To dockerhub
-      id: push-to-ghcr
+    - name: Push To Docker Hub
+      id: push-to-dockerhub
       uses: redhat-actions/push-to-registry@v2
       with:
         image: ${{ steps.build-image.outputs.image }}
@@ -90,5 +81,5 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: Print image url
-      run: echo "Image pushed to ${{ steps.push-to-ghcr.outputs.registry-paths }}"
+    - name: Print image URLs
+      run: echo "Image pushed to ${{ steps.push-to-dockerhub.outputs.registry-paths }}"
