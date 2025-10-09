@@ -62,12 +62,23 @@ jobs:
       run: |
         echo "IMAGE_TAGS=latest ${{ steps.set-vars.outputs.image_tag_sha }} ${{ steps.determine-branch.outputs.image_tag_branch }}" >> $GITHUB_ENV
 
+    # # If the final image uses a private base image
+    # - name: Log in to Red Hat Registry
+    #   uses: redhat-actions/podman-login@v1
+    #   with:
+    #     registry: registry.redhat.io
+    #     username: ${{ secrets.REGISTRY_REDHAT_IO_USER }}
+    #     password: ${{ secrets.REGISTRY_REDHAT_IO_PASSWORD }}
+
     - name: Build Image
       id: build-image
       uses: redhat-actions/buildah-build@v2
       with:
         image: ${{ env.IMAGE_NAME }}
         tags: ${{ env.IMAGE_TAGS }}
+        # https://github.com/redhat-actions/buildah-build?tab=readme-ov-file#multi-arch-builds
+        # archs: amd64
+        # platforms: linux/amd64, linux/ppc64le
         containerfiles: |
           ./Dockerfile
 
