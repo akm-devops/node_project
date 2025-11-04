@@ -30,7 +30,8 @@ jobs:
     build:
         name: Build and push image
         if: ${{ github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true }}
-        runs-on: ${{ inputs.runner || 'runner-scale-set-dind' }}
+        # runs-on: ${{ inputs.runner || 'runner-scale-set-dind' }}
+        runs-on: ubuntu-latest
         permissions:
             packages: write
             contents: read
@@ -80,14 +81,14 @@ jobs:
             #     username: ${{ secrets.REGISTRY_REDHAT_IO_USER }}
             #     password: ${{ secrets.REGISTRY_REDHAT_IO_PASSWORD }}
 
-            - name: Install buildah (Ubuntu/Linux runners)
-              if: ${{ runner.environment == 'self-hosted' && runner.os == 'Linux' }}
-              run: |
-                  # On GitHub-hosted ubuntu runners buildah is preinstalled.
-                  # Install it so the redhat-actions/buildah-build action can find the executable.
-                  # Debian Stable/Bookworm or Unstable/Sid
-                  sudo apt-get update
-                  sudo apt-get -y install buildah
+            # - name: Install buildah (Ubuntu/Linux runners)
+            #   if: ${{ runner.environment == 'self-hosted' && runner.os == 'Linux' }}
+            #   run: |
+            #       # On GitHub-hosted ubuntu runners buildah is preinstalled.
+            #       # Install it so the redhat-actions/buildah-build action can find the executable.
+            #       # Debian Stable/Bookworm or Unstable/Sid
+            #       sudo apt-get update
+            #       sudo apt-get -y install buildah
 
             - name: Build Image
               id: build-image
