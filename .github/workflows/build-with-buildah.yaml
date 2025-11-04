@@ -1,96 +1,102 @@
 name: Build with Buildah
 
 on:
-  workflow_dispatch:
-    inputs:
-      runner:
-        description: 'Choose the Runner'
-        required: true
-        default: 'ubuntu-latest'
-        type: choice
-        options:
-          - runner-scale-set-kubernetes
-          - runner-scale-set-dind
-          - ubuntu-latest
+    workflow_dispatch:
+        inputs:
+            runner:
+                description: "Choose the Runner"
+                required: true
+                default: "ubuntu-latest"
+                type: choice
+                options:
+                    - runner-scale-set-kubernetes
+                    - runner-scale-set-dind
+                    - ubuntu-latest
+
+    pull_request:
+        branches:
+            - "**"
 
 env:
-  IMAGE_NAME: nodejs-image-demo
-  IMAGE_REGISTRY: docker.io
-  IMAGE_NAMESPACE: ashwinkmgowda
+    IMAGE_NAME: nodejs-image-demo
+    IMAGE_REGISTRY: docker.io
+    IMAGE_NAMESPACE: ashwinkmgowda
 
 jobs:
-  build:
-    name: Build and push image
-    runs-on: ${{ inputs.runner }}
-    permissions:
-      packages: write
-      contents: read
-      attestations: write
-      id-token: write
+    build:
+        name: Build and push image
+        if: ${{ github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true }}
+        runs-on: ${{ inputs.runner || 'runner-scale-set-dind' }}
+        permissions:
+            packages: write
+            contents: read
+            attestations: write
+            id-token: write
 
-    steps:
-    - uses: actions/checkout@v4
+        steps:
+            - uses: actions/checkout@v4
 
-    - name: Set Build Variables
-      id: set-vars
-      run: |
-        # echo "image_tag=$(echo $GITHUB_SHA  | cut -c1-6)" >> $GITHUB_OUTPUT
-        echo "image_tag_sha=${GITHUB_SHA}" >> $GITHUB_OUTPUT
+            - name: Capture PR base branch (on PR opened)
+              if: ${{ github.event_name == 'pull_request' && github.event.action == 'opened' }}
+              run: |
+                  echo "pr_base_branch=${{ github.event.pull_request.base.ref }}" >> $GITHUB_ENV
 
-    - name: Print SHA tag
-      run: |
-        echo "Image Tag SHA: ${{ steps.set-vars.outputs.image_tag_sha }}"
+            - name: Capture PR target branch on merge (when PR closed & merged)
+              if: ${{ github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true }}
+              run: |
+                  # When a PR is merged, the target branch is available as pull_request.base.ref
+                  echo "pr_merged_target_branch=${{ github.event.pull_request.base.ref }}" >> $GITHUB_ENV
 
-    - name: Determine base branch and sanitize
-      id: determine-branch
-      run: |
-        if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-          BASE_BRANCH="${{ github.event.pull_request.base.ref }}"
-        else
-          BASE_BRANCH="${GITHUB_REF#refs/heads/}"
-        fi
+            - name: Determine target branch and sanitize
+              id: determine-branch
+              run: |
+                  # For merged PRs, the target branch is available as pull_request.base.ref
+                  BASE_BRANCH="${{ github.event.pull_request.base.ref }}"
+                  # Sanitize branch name for Docker tag (replace slashes with dashes)
+                  SANITIZED_BRANCH=$(echo "$BASE_BRANCH" | sed 's#/#-#g')
+                  IMAGE_TAG_BRANCH="${SANITIZED_BRANCH}-${{ github.run_number }}"
+                  echo "image_tag_branch=$IMAGE_TAG_BRANCH" >> $GITHUB_OUTPUT
+                  # Also expose as env for compatibility with other steps
+                  echo "IMAGE_TAG_BRANCH=$IMAGE_TAG_BRANCH" >> $GITHUB_ENV
 
-        # Sanitize branch name for Docker tag (replace slashes with dashes)
-        SANITIZED_BRANCH=$(echo "$BASE_BRANCH" | sed 's#/#-#g')
-        echo "image_tag_branch=${SANITIZED_BRANCH}-${{ github.run_number }}" >> $GITHUB_OUTPUT
+            - name: Print branch tag
+              run: |
+                  echo "Image Tag Branch: ${{ steps.determine-branch.outputs.image_tag_branch }}"
 
-    - name: Print branch tag
-      run: |
-        echo "Image Tag Branch: ${{ steps.determine-branch.outputs.image_tag_branch }}"
+            - name: Set Image Tags
+              run: |
+                  # Set IMAGE_TAGS to include 'latest' and the target-branch-runNumber tag
+                  echo "IMAGE_TAGS=latest ${{ steps.determine-branch.outputs.image_tag_branch }}" >> $GITHUB_ENV
 
-    - name: Set Image Tags
-      run: |
-        echo "IMAGE_TAGS=latest ${{ steps.set-vars.outputs.image_tag_sha }} ${{ steps.determine-branch.outputs.image_tag_branch }}" >> $GITHUB_ENV
+            # # If the final image uses a private base image
+            # - name: Log in to Red Hat Registry
+            #   uses: redhat-actions/podman-login@v1
+            #   with:
+            #     registry: registry.redhat.io
+            #     username: ${{ secrets.REGISTRY_REDHAT_IO_USER }}
+            #     password: ${{ secrets.REGISTRY_REDHAT_IO_PASSWORD }}
 
-    # # If the final image uses a private base image
-    # - name: Log in to Red Hat Registry
-    #   uses: redhat-actions/podman-login@v1
-    #   with:
-    #     registry: registry.redhat.io
-    #     username: ${{ secrets.REGISTRY_REDHAT_IO_USER }}
-    #     password: ${{ secrets.REGISTRY_REDHAT_IO_PASSWORD }}
+            - name: Build Image
+              id: build-image
+              uses: redhat-actions/buildah-build@v2
+              with:
+                  image: ${{ env.IMAGE_NAME }}
+                  tags: "latest ${{ steps.determine-branch.outputs.image_tag_branch }}"
+                  # https://github.com/redhat-actions/buildah-build?tab=readme-ov-file#multi-arch-builds
+                  # archs: amd64
+                  # platforms: linux/amd64, linux/ppc64le
+                  containerfiles: |
+                      ./Dockerfile
 
-    - name: Build Image
-      id: build-image
-      uses: redhat-actions/buildah-build@v2
-      with:
-        image: ${{ env.IMAGE_NAME }}
-        tags: ${{ env.IMAGE_TAGS }}
-        # https://github.com/redhat-actions/buildah-build?tab=readme-ov-file#multi-arch-builds
-        # archs: amd64
-        # platforms: linux/amd64, linux/ppc64le
-        containerfiles: |
-          ./Dockerfile
+            - name: Push To Docker Hub
+              id: push-to-dockerhub
+              uses: redhat-actions/push-to-registry@v2
+              with:
+                  image: ${{ steps.build-image.outputs.image }}
+                  tags: ${{ steps.build-image.outputs.tags }}
+                  registry: ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAMESPACE }}
+                  username: ${{ secrets.DOCKERHUB_USERNAME }}
+                  password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: Push To Docker Hub
-      id: push-to-dockerhub
-      uses: redhat-actions/push-to-registry@v2
-      with:
-        image: ${{ steps.build-image.outputs.image }}
-        tags: ${{ steps.build-image.outputs.tags }}
-        registry: ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAMESPACE }}
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-    - name: Print image URLs
-      run: echo "Image pushed to ${{ steps.push-to-dockerhub.outputs.registry-paths }}"
+            - name: Print image URLs
+              run: echo "Image pushed to ${{ steps.push-to-dockerhub.outputs.registry-paths }}"
