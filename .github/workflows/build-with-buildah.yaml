@@ -14,8 +14,12 @@ on:
                     - ubuntu-latest
 
     pull_request:
-        branches:
-            - "**"
+        types:
+            - opened
+            - synchronize
+            - reopened
+            - edited
+            - closed
 
 env:
     IMAGE_NAME: nodejs-image-demo
