@@ -82,11 +82,12 @@ jobs:
 
       - name: Print branch tag
         run: |
-          echo "Image Tag Branch: ${{ steps.determine-branch.outputs.image_tag_branch }}  
-          # - name: Set Image Tags
-          #   run: |
-          #       # Set IMAGE_TAGS to include 'latest' and the target-branch-runNumber tag
-          #       echo "IMAGE_TAGS=latest ${{ steps.determine-branch.outputs.image_tag_branch }}" >> $GITHUB_ENV
+          echo "Image Tag Branch: ${{ steps.determine-branch.outputs.image_tag_branch }}"
+
+      - name: Set Image Tags
+        run: |
+            # Set IMAGE_TAGS to include 'latest' and the target-branch-runNumber tag
+            echo "IMAGE_TAGS=latest ${{ steps.determine-branch.outputs.image_tag_branch }}" >> $GITHUB_ENV
 
         # # If the final image uses a private base image
         # - name: Log in to Red Hat Registry
@@ -105,27 +106,27 @@ jobs:
         #       sudo apt-get update
         #       sudo apt-get -y install buildah
 
-        # - name: Build Image
-        #   id: build-image
-        #   uses: redhat-actions/buildah-build@v2
-        #   with:
-        #       image: ${{ env.IMAGE_NAME }}
-        #       tags: "latest ${{ steps.determine-branch.outputs.image_tag_branch }}"
-        #       # https://github.com/redhat-actions/buildah-build?tab=readme-ov-file#multi-arch-builds
-        #       # archs: amd64
-        #       # platforms: linux/amd64, linux/ppc64le
-        #       containerfiles: |
-        #           ./Dockerfile
+      - name: Build Image
+        id: build-image
+        uses: redhat-actions/buildah-build@v2
+        with:
+            image: ${{ env.IMAGE_NAME }}
+            tags: "latest ${{ steps.determine-branch.outputs.image_tag_branch }}"
+            # https://github.com/redhat-actions/buildah-build?tab=readme-ov-file#multi-arch-builds
+            # archs: amd64
+            # platforms: linux/amd64, linux/ppc64le
+            containerfiles: |
+                ./Dockerfile
 
-        # - name: Push To Docker Hub
-        #   id: push-to-dockerhub
-        #   uses: redhat-actions/push-to-registry@v2
-        #   with:
-        #       image: ${{ steps.build-image.outputs.image }}
-        #       tags: ${{ steps.build-image.outputs.tags }}
-        #       registry: ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAMESPACE }}
-        #       username: ${{ secrets.DOCKERHUB_USERNAME }}
-        #       password: ${{ secrets.DOCKERHUB_TOKEN }}
-        
-        # - name: Print image URLs
-        #   run: echo "Image pushed to ${{ steps.push-to-dockerhub.outputs.registry-paths }}"
+      - name: Push To Docker Hub
+        id: push-to-dockerhub
+        uses: redhat-actions/push-to-registry@v2
+        with:
+            image: ${{ steps.build-image.outputs.image }}
+            tags: ${{ steps.build-image.outputs.tags }}
+            registry: ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAMESPACE }}
+            username: ${{ secrets.DOCKERHUB_USERNAME }}
+            password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Print image URLs
+        run: echo "Image pushed to ${{ steps.push-to-dockerhub.outputs.registry-paths }}"
